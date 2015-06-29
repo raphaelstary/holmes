@@ -1,0 +1,22 @@
+{
+  "name": "Holmes",
+  "version": "0.0.1",
+  "description": "custom analytics service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raphaelstary/holmes.git"
+  },
+  "author": "Raphael Stary",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raphaelstary/holmes/issues"
+  },
+  "homepage": "https://github.com/raphaelstary/holmes",
+  "dependencies": {
+    "express": "^4.13.0"
+  }
+}
