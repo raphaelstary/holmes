@@ -42,5 +42,5 @@ build/buildinfo.properties
 build/config/buildinfo.properties
 
 node_modules
-www-built
-clients.js
+TenantCode.js
+validateClientId.js
