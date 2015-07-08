@@ -9,7 +9,7 @@ var RegistrationHandler = require('./model/RegistrationHandler');
 var AnalyticsHandler = require('./model/AnalyticsHandler');
 var Checker = require('./model/Checker');
 
-var checker = new Checker(require('./model/TenantCode'), require('./model/validateClientId'));
+var checker = new Checker(Config.TENANT_CODE, require('./model/validateClientId'));
 var register = new RegistrationHandler(checker, require('./model/generateUUID'));
 var main = new AnalyticsHandler(checker);
 
