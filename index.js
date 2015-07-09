@@ -8,10 +8,11 @@ var Config = require('./Config');
 var RegistrationHandler = require('./model/RegistrationHandler');
 var AnalyticsHandler = require('./model/AnalyticsHandler');
 var Checker = require('./model/Checker');
+var getUUID = require('./model/generateUUID');
 
 var checker = new Checker(Config.TENANT_CODE, require('./model/validateClientId'));
-var register = new RegistrationHandler(checker, require('./model/generateUUID'));
-var main = new AnalyticsHandler(checker);
+var register = new RegistrationHandler(checker, getUUID);
+var main = new AnalyticsHandler(checker, getUUID);
 
 app.use(bodyParser.json());
 
