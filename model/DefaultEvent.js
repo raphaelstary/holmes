@@ -4,6 +4,8 @@ function DefaultEvent(dbConnection) {
 
 DefaultEvent.prototype.handle = function (event) {
     event.time = Date.now();
+    event.timeString = Date();
+
     this.dbConnection.send(event);
 };
 
