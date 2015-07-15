@@ -4,16 +4,13 @@ var bodyParser = require('body-parser');
 var https = require('https');
 var fs = require('fs');
 
+var console = require('./model/Logger');
 var Config = require('./Config');
-var RegistrationHandler = require('./model/RegistrationHandler');
-var AnalyticsHandler = require('./model/AnalyticsHandler');
-var Checker = require('./model/Checker');
-var getUUID = require('./model/generateUUID');
+var factory = require('./model/HandlerFactory');
+var register = factory.register;
+var main = factory.main;
 
-var checker = new Checker(Config.TENANT_CODE, require('./model/validateClientId'));
-var register = new RegistrationHandler(checker, getUUID);
-var main = new AnalyticsHandler(checker, getUUID);
-
+app.enable('trust proxy');
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
@@ -33,5 +30,5 @@ var options = {
 };
 
 var server = https.createServer(options, app).listen(Config.PORT, function () {
-    console.log('Holmes started listening on port ' + server.address().port);
+    console.info('Holmes started listening on port ' + server.address().port);
 });

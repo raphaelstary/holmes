@@ -1,9 +1,9 @@
-var https = require('http'); // todo change to https
-var Config = require('./../Config');
+var console = require('./Logger');
 
-function AnalyticsHandler(checker, getUUID) {
+function AnalyticsHandler(checker, systemEventHandler, defaultEventHandler) {
     this.checker = checker;
-    this.getUUID = getUUID;
+    this.system = systemEventHandler;
+    this.default = defaultEventHandler;
 }
 
 AnalyticsHandler.prototype.handle = function (request, response) {
@@ -13,45 +13,14 @@ AnalyticsHandler.prototype.handle = function (request, response) {
     response.sendStatus(200);
 
     if (success) {
-        var body = JSON.stringify(payload);
-
-        var options = {
-            hostname: Config.DB_HOSTNAME,
-            port: Config.DB_PORT,
-            path: '/' + Config.DB_NAME + '/' + this.getUUID(),
-            method: 'PUT',
-            auth: Config.DB_USER + ':' + Config.DB_PASSWORD,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Content-Length': body.length
-            }
-        };
-
-        var httpsRequest = https.request(options, function (httpsResponse) {
-            if (httpsResponse.statusCode >= 400) {
-                console.log('statusCode:', httpsResponse.statusCode);
-                console.log('headers:', httpsResponse.headers);
-
-                var body = '';
-                httpsResponse.on('data', function (data) {
-                    body += data;
-                });
-                httpsResponse.on('end', function () {
-                    console.log('body:', JSON.parse(body));
-                });
-            }
-        });
-
-        httpsRequest.on('error', function (error) {
-            console.error(error);
-        });
-
-        httpsRequest.write(body);
-        httpsRequest.end();
+        if (payload.type == 'system') {
+            this.system.handle(payload, request);
+        } else {
+            this.default.handle(payload);
+        }
 
     } else {
-        console.log('corrupt data:', payload);
+        console.warn('corrupt data: ' + JSON.stringify(payload));
     }
 };
 
