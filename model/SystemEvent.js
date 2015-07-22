@@ -30,8 +30,11 @@ SystemEvent.prototype.handle = function (event, request) {
     }
 
     dns.reverse(request.ip, function (error, hostnames) {
-        if (error)
+        if (error) {
+            console.error(error.message);
             console.error(error.code);
+            console.error(error.stack);
+        }
 
         https.get('https://freegeoip.net/json/' + request.ip, function (response) {
 
@@ -48,6 +51,8 @@ SystemEvent.prototype.handle = function (event, request) {
                 console.warn('headers: ' + JSON.stringify(response.headers));
             }
         }).on('error', function (error) {
+            console.error(error.message);
+            console.error(error.stack);
             console.error(error);
         });
     });

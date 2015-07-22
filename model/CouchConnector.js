@@ -42,7 +42,8 @@ CouchConnector.prototype.send = function (event) {
     });
 
     request.on('error', function (error) {
-        console.error(error);
+        console.error(error.message);
+        console.error(error.stack);
     });
 
     request.write(body);

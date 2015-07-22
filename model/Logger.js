@@ -2,7 +2,11 @@ var fs = require('fs');
 var debug = true;
 
 function log(logLevel, dataMsg) {
-    var msg = Date() + ' ' + logLevel + ': ' + dataMsg + '\n';
+
+    // magic line hack :'(
+    var callerInfo = new Error().stack.split('\n')[2].trim();
+
+    var msg = Date() + ' ' + logLevel + ' ' + callerInfo + ': ' + dataMsg + '\n';
         fs.appendFile('holmes.log', msg, function (err) {
             if (err) throw err;
             if (debug)
