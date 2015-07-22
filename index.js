@@ -5,10 +5,18 @@ var https = require('https');
 var fs = require('fs');
 
 var console = require('./model/Logger');
-var Config = require('./Config');
 var factory = require('./model/HandlerFactory');
 var register = factory.register;
 var main = factory.main;
+
+var args = process.argv.slice(2);
+var Config;
+var flagIndex = args.indexOf('--config');
+if(flagIndex != -1) {
+    Config = require('./' + args[flagIndex + 1]);
+} else {
+    Config = require('./config'); // equals to --config config.json
+}
 
 app.enable('trust proxy');
 app.use(bodyParser.json());
