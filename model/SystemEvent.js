@@ -17,7 +17,7 @@ SystemEvent.prototype.handle = function (event, request) {
         event.latitude = geoData.latitude;
         event.longitude = geoData.longitude;
 
-        event.hostnames = JSON.stringify(hostnames);
+        event.hostnames = hostnames;
 
         self.handler.handle(event);
     }
