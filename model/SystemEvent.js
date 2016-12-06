@@ -22,12 +22,7 @@ SystemEvent.prototype.handle = function (event, request) {
         self.handler.handle(event);
     }
 
-    var ip = request.ip;
-    var template = /^:(ffff)?:(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/;
-    var hasIPv4Version = template.test(ip);
-    if (hasIPv4Version) {
-        ip.replace(/^.*:/, '');
-    }
+    var ip = startsWidth(request.ip, '::ffff:') ? request.ip.substring(7) : request.ip;
 
     if (ip == '127.0.0.1' || ip == '::1') {
         callback({
@@ -65,5 +60,9 @@ SystemEvent.prototype.handle = function (event, request) {
         });
     });
 };
+
+function startsWidth(actualString, searchString) {
+    return actualString.indexOf(searchString, 0) === 0;
+}
 
 module.exports = SystemEvent;
