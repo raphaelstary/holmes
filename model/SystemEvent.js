@@ -22,7 +22,14 @@ SystemEvent.prototype.handle = function (event, request) {
         self.handler.handle(event);
     }
 
-    if (request.ip == '127.0.0.1' || request.ip == '::1') {
+    var ip = request.ip;
+    var template = /^:(ffff)?:(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/;
+    var hasIPv4Version = template.test(ip);
+    if (hasIPv4Version) {
+        ip.replace(/^.*:/, '');
+    }
+
+    if (ip == '127.0.0.1' || ip == '::1') {
         callback({
             ip: '127.0.0.1',
             country_name: 'localhost'
@@ -30,14 +37,14 @@ SystemEvent.prototype.handle = function (event, request) {
         return;
     }
 
-    dns.reverse(request.ip, function (error, hostnames) {
+    dns.reverse(ip, function (error, hostnames) {
         if (error) {
             console.error(error.message);
             console.error(error.code);
             console.error(error.stack);
         }
 
-        https.get('https://freegeoip.net/json/' + request.ip, function (response) {
+        https.get('https://freegeoip.net/json/' + ip, function (response) {
 
             var body = '';
             response.on('data', function (data) {
