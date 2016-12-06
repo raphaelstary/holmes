@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/raphaelstary/holmes",
   "dependencies": {
-    "body-parser": "^1.13.1",
-    "express": "^4.13.0"
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0"
   }
 }
