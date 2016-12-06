@@ -1,5 +1,6 @@
 var console = require('./Logger');
 var https = require('https');
+var dns = require('dns');
 
 function SystemEvent(defaultHandler) {
     this.handler = defaultHandler;
