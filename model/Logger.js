@@ -6,6 +6,7 @@ function log(logLevel, dataMsg) {
     // magic line hack :'(
     var callerInfo = new Error().stack.split('\n')[2].trim();
 
+    //noinspection JSPotentiallyInvalidConstructorUsage
     var msg = Date() + ' ' + logLevel + ' ' + callerInfo + ': ' + dataMsg + '\n';
         fs.appendFile('holmes.log', msg, function (err) {
             if (err) throw err;
