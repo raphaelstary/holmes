@@ -1,5 +1,5 @@
-var console = require('./Logger');
-var https = require('http'); // todo change to https
+var console = require('./../utils/Logger');
+var http = require('http'); // todo change to https when DB has its own instance
 
 function CouchConnector(getUUID, dbHostName, dbPort, dbName, dbUser, dbPassword) {
     this.getUUID = getUUID;
@@ -9,6 +9,23 @@ function CouchConnector(getUUID, dbHostName, dbPort, dbName, dbUser, dbPassword)
     this.user = dbUser;
     this.password = dbPassword;
 }
+
+CouchConnector.prototype.isHealthy = function (callback) {
+    http.get('http://' + this.host + ':' + this.port, function (response) {
+        if (response.statusCode !== 200) {
+            callback(true);
+        } else {
+            console.warn('couchDB returned status code: ' + response.statusCode);
+            callback(false);
+        }
+    }).on('error', function (error) {
+        console.error(error.message);
+        console.error(error.stack);
+        console.error(error);
+
+        callback(false);
+    });
+};
 
 CouchConnector.prototype.send = function (event) {
     var body = JSON.stringify(event);
@@ -26,7 +43,7 @@ CouchConnector.prototype.send = function (event) {
         }
     };
 
-    var request = https.request(options, function (response) {
+    var request = http.request(options, function (response) {
         if (response.statusCode >= 400) {
             console.warn('statusCode: ' + response.statusCode);
             console.warn('headers: ' + JSON.stringify(response.headers));

@@ -1,4 +1,4 @@
-var console = require('./Logger');
+var console = require('./../utils/Logger');
 
 function AnalyticsHandler(checker, systemEventHandler, defaultEventHandler) {
     this.checker = checker;

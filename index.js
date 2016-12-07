@@ -9,16 +9,14 @@ var fs = require('fs');
 var args = process.argv.slice(2);
 var Config;
 var flagIndex = args.indexOf('--config');
-if(flagIndex != -1) {
+if (flagIndex != -1) {
     Config = require('./' + args[flagIndex + 1]);
 } else {
     Config = require('./config'); // equals to --config config.json
 }
 
-var console = require('./model/Logger');
-var factory = require('./model/HandlerFactory')(Config);
-var register = factory.register;
-var main = factory.main;
+var console = require('./model/utils/Logger');
+var routes = require('./model/routes/createRoutes')(Config);
 
 app.enable('trust proxy');
 app.use(bodyParser.json());
@@ -29,9 +27,9 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.post('/register', register.handle.bind(register));
-
-app.post('/event', main.handle.bind(main));
+app.post('/register', routes.register);
+app.post('/event', routes.main);
+app.get('/status', routes.getStatus);
 
 var options = {
     key: fs.readFileSync(Config.SSL_KEY_PATH, 'utf8'),

@@ -1,4 +1,4 @@
-var console = require('./Logger');
+var console = require('./../utils/Logger');
 var https = require('https');
 var dns = require('dns');
 
