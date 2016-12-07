@@ -12,7 +12,7 @@ function CouchConnector(getUUID, dbHostName, dbPort, dbName, dbUser, dbPassword)
 
 CouchConnector.prototype.isHealthy = function (callback) {
     http.get('http://' + this.host + ':' + this.port, function (response) {
-        if (response.statusCode !== 200) {
+        if (response.statusCode == 200) {
             callback(true);
         } else {
             console.warn('couchDB returned status code: ' + response.statusCode);
