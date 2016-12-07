@@ -35,7 +35,9 @@ app.post('/event', main.handle.bind(main));
 
 var options = {
     key: fs.readFileSync(Config.SSL_KEY_PATH, 'utf8'),
-    cert: fs.readFileSync(Config.SSL_CERT_PATH, 'utf8')
+    cert: fs.readFileSync(Config.SSL_CERT_PATH, 'utf8'),
+    ca: fs.readFileSync(Config.SSL_CA_PATH, 'utf8'),
+    dhparam: fs.readFileSync(Config.SSL_DH_PATH, 'utf8')
 };
 
 var server = https.createServer(options, app).listen(Config.PORT, function () {
