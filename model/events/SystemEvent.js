@@ -1,6 +1,5 @@
 var console = require('./../utils/Logger');
 var https = require('https');
-var dns = require('dns');
 
 function SystemEvent(defaultHandler) {
     this.handler = defaultHandler;
@@ -9,15 +8,12 @@ function SystemEvent(defaultHandler) {
 SystemEvent.prototype.handle = function (event, request) {
     var self = this;
 
-    function callback(geoData, hostnames) {
-        event.ip = geoData.ip;
+    function callback(geoData) {
         event.country_code = geoData.country_code;
         event.country_name = geoData.country_name;
         event.time_zone = geoData.time_zone;
-        event.latitude = geoData.latitude;
-        event.longitude = geoData.longitude;
-
-        event.hostnames = hostnames;
+        event.region_name = geoData.region_name;
+        event.city = geoData.city;
 
         self.handler.handle(event);
     }
@@ -32,32 +28,24 @@ SystemEvent.prototype.handle = function (event, request) {
         return;
     }
 
-    dns.reverse(ip, function (error, hostnames) {
-        if (error) {
-            console.error(error.message);
-            console.error(error.code);
-            console.error(error.stack);
-        }
+    https.get('https://freegeoip.net/json/' + ip, function (response) {
 
-        https.get('https://freegeoip.net/json/' + ip, function (response) {
-
-            var body = '';
-            response.on('data', function (data) {
-                body += data;
-            });
-            response.on('end', function () {
-                callback(JSON.parse(body), hostnames);
-            });
-
-            if (response.statusCode >= 400) {
-                console.warn('statusCode: ' + response.statusCode);
-                console.warn('headers: ' + JSON.stringify(response.headers));
-            }
-        }).on('error', function (error) {
-            console.error(error.message);
-            console.error(error.stack);
-            console.error(error);
+        var body = '';
+        response.on('data', function (data) {
+            body += data;
         });
+        response.on('end', function () {
+            callback(JSON.parse(body));
+        });
+
+        if (response.statusCode >= 400) {
+            console.warn('statusCode: ' + response.statusCode);
+            console.warn('headers: ' + JSON.stringify(response.headers));
+        }
+    }).on('error', function (error) {
+        console.error(error.message);
+        console.error(error.stack);
+        console.error(error);
     });
 };
 
